@@ -45,11 +45,11 @@ module OmniAuth
       end
 
       def request_phase
-        p "request_phase_start_v2"
-        p "request_phase_auth_code_v2: #{client.auth_code.authorize_url({:redirect_uri => callback_url}.merge(authorize_params))}"
+        p "request_phase_start_v3"
+        p "request_phase_auth_code_v3: #{client.auth_code.authorize_url({:redirect_uri => callback_url}.merge(authorize_params))}"
         redirect client.auth_code.authorize_url({:redirect_uri => callback_url}.merge(authorize_params))
       rescue => e
-        p "request_phase_error_v2: #{e}"
+        p "request_phase_error_v3: #{e}"
       end
 
       def authorize_params
@@ -68,9 +68,9 @@ module OmniAuth
       end
 
       def callback_phase # rubocop:disable AbcSize, CyclomaticComplexity, MethodLength, PerceivedComplexity
-        p "callback_phase_start_v2"
-        p "callback_phase_request_v2: #{request}"
+        p "callback_phase_start_v3"
         error = request.params["error_reason"] || request.params["error"]
+        p "callback_phase_debug_error_v3: #{error}"
         if error
           fail!(error, CallbackError.new(request.params["error"], request.params["error_description"] || request.params["error_reason"], request.params["error_uri"]))
         elsif !options.provider_ignores_state && (request.params["state"].to_s.empty? || request.params["state"] != session.delete("omniauth.state"))
